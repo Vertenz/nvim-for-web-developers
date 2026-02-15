@@ -3,15 +3,10 @@ return {
 	version = "*",
 	lazy = false,
 	dependencies = {
-		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
-		"MunifTanjim/nui.nvim",
 	},
 	config = function()
 		vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-
-		vim.g.loaded_netrw = 1
-		vim.g.loaded_netrwPlugin = 1
 
 		local function open_nvim_tree(data)
 			if vim.fn.isdirectory(data.file) == 1 then

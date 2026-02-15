@@ -1,6 +1,6 @@
 return {
-    {
-        'mbbill/undotree',
-        vim.keymap.set('n', '<C-U>', vim.cmd.UndotreeToggle, { noremap = true, silent = true }),
-    },
+	"mbbill/undotree",
+	keys = {
+		{ "<C-U>", vim.cmd.UndotreeToggle, noremap = true, silent = true, desc = "Toggle Undotree" },
+	},
 }
