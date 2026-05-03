@@ -2,42 +2,59 @@ local servers = {
 	"vtsls",
 	"vue_ls",
 	"lua_ls",
+	"html",
+	"emmet_language_server",
+	"tailwindcss",
 	"stylelint_lsp",
 	"somesass_ls",
 	"css_variables",
+	"cssls",
 	"basedpyright",
 	"ruff",
 	"marksman",
 	"dockerls",
 	"docker_compose_language_service",
 	"yamlls",
+	"jsonls",
 	"helm_ls",
 }
 
 local additional = {
 	"eslint_d",
+	"markdownlint",
+	"prettier",
 	"stylua",
 	"prettierd",
+	"stylelint",
 }
 
 return {
 	"mason-org/mason-lspconfig.nvim",
 	opts = {
-		ui = {
-			icons = {
-				package_installed = "✓",
-				package_pending = "➜",
-				package_uninstalled = "✗",
-			},
-		},
 		ensure_installed = servers,
+		automatic_enable = false,
 	},
 	dependencies = {
-		{ "mason-org/mason.nvim", opts = {} },
+		{
+			"mason-org/mason.nvim",
+			opts = {
+				providers = {
+					"mason.providers.client",
+				},
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			},
+		},
 		{
 			"neovim/nvim-lspconfig",
 			dependencies = {
 				"WhoIsSethDaniel/mason-tool-installer.nvim",
+				"b0o/SchemaStore.nvim",
 			},
 			config = function()
 				require("mason-tool-installer").setup({ ensure_installed = additional })
@@ -57,11 +74,7 @@ return {
 						map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 						map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 						map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
-						map(
-							"gW",
-							require("telescope.builtin").lsp_dynamic_workspace_symbols,
-							"Open Workspace Symbols"
-						)
+						map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
 						map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
 
 						local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -100,10 +113,7 @@ return {
 
 						if
 							client
-							and client:supports_method(
-								vim.lsp.protocol.Methods.textDocument_inlayHint,
-								event.buf
-							)
+							and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
 						then
 							map("<leader>th", function()
 								vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))

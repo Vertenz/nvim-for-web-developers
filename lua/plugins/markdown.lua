@@ -1,8 +1,11 @@
 return {
 	{
-		"MeanderingProgrammer/markdown.nvim",
+		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {
+			completions = {
+				lsp = { enabled = true },
+			},
 			toc = {
 				enabled = true,
 				max_level = 3,
@@ -15,7 +18,7 @@ return {
 		keys = {
 			{
 				"<leader>tm",
-				"<cmd>RenderMarkdownToggle<cr>",
+				"<cmd>RenderMarkdown toggle<cr>",
 				desc = "Toggle Markdown preview",
 			},
 		},

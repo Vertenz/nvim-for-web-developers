@@ -2,6 +2,8 @@ return {
 	"mfussenegger/nvim-lint",
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
+		vim.env.ESLINT_D_PPID = vim.fn.getpid()
+
 		local lint = require("lint")
 		lint.linters_by_ft = {
 			markdown = { "markdownlint" },

@@ -1,5 +1,12 @@
 local somesass_ls = {
-	filetypes = { "scss", "sass", "css", "vue", "tsx", "jsx" },
+	filetypes = { "scss", "sass", "vue" },
+	settings = {
+		somesass = {
+			loadPaths = { "app/assets/scss" },
+			suggestFromUseOnly = false,
+			scanImportedFiles = true,
+		},
+	},
 }
 
 local css_variables = {
@@ -12,21 +19,50 @@ local css_variables = {
 	},
 }
 
-local prettierd_config = {
-	filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue" },
+local stylelint_lsp_config = {
+	settings = {
+		stylelint = {
+			validate = { "css", "postcss", "scss", "less", "vue" },
+		},
+	},
+}
+
+local lua_ls_config = {
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				checkThirdParty = false,
+			},
+		},
+	},
+}
+
+local jsonls_config = {
+	settings = {
+		json = {
+			schemas = require("schemastore").json.schemas(),
+			validate = { enable = true },
+		},
+	},
 }
 
 local yamlls_config = {
 	settings = {
 		yaml = {
-			schemas = {
-				kubernetes = { "k8s/**/*.yaml", "k8s/**/*.yml" },
-				["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.{yml,yaml}",
-				["https://json.schemastore.org/github-action.json"] = ".github/action.{yml,yaml}",
-				["https://json.schemastore.org/docker-compose.json"] = "docker-compose*.{yml,yaml}",
-				["https://json.schemastore.org/chart.json"] = "Chart.yaml",
-				["https://json.schemastore.org/kustomization.json"] = "kustomization.yaml",
-			},
+			schemaStore = { enable = false, url = "" },
+			schemas = require("schemastore").yaml.schemas({
+				extra = {
+					{
+						description = "Kubernetes resource definitions",
+						fileMatch = { "k8s/**/*.yaml", "k8s/**/*.yml" },
+						name = "kubernetes",
+						url = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/all.json",
+					},
+				},
+			}),
 			validate = true,
 			completion = true,
 			hover = true,
@@ -43,6 +79,27 @@ local ruff_config = {
 
 vim.lsp.config("somesass_ls", somesass_ls)
 vim.lsp.config("css_variables", css_variables)
-vim.lsp.config("prettierd", prettierd_config)
+vim.lsp.config("stylelint_lsp", stylelint_lsp_config)
+vim.lsp.config("lua_ls", lua_ls_config)
+vim.lsp.config("jsonls", jsonls_config)
 vim.lsp.config("yamlls", yamlls_config)
 vim.lsp.config("ruff", ruff_config)
+
+vim.lsp.enable({
+	"somesass_ls",
+	"css_variables",
+	"cssls",
+	"stylelint_lsp",
+	"html",
+	"emmet_language_server",
+	"tailwindcss",
+	"jsonls",
+	"yamlls",
+	"lua_ls",
+	"basedpyright",
+	"ruff",
+	"marksman",
+	"dockerls",
+	"docker_compose_language_service",
+	"helm_ls",
+})

@@ -45,7 +45,6 @@ return {
 			{ "<leader>t", group = "[T]oggle" },
 			{ "<leader>g", group = "[G]it", mode = { "n", "v" } },
 			{ "<leader>h", group = "[H]arpoon" },
-			{ "<leader>a", group = "[A]I", mode = { "n", "v" } },
 			{ "<leader>z", group = "Spell" },
 		},
 	},
