@@ -1,1 +1,1 @@
-# nvim-frontend
+# nvim-web-dev
