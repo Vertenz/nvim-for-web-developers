@@ -6,13 +6,6 @@ return {
 			completions = {
 				lsp = { enabled = true },
 			},
-			toc = {
-				enabled = true,
-				max_level = 3,
-			},
-			codeblock = {
-				highlight = true,
-			},
 		},
 		ft = { "markdown" },
 		keys = {

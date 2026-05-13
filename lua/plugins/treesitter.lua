@@ -32,6 +32,9 @@ return {
 			"dockerfile",
 			"sql",
 			"helm",
+			"terraform",
+			"hcl",
+			"prisma",
 			"regex",
 		},
 		auto_install = true,
@@ -84,6 +87,51 @@ return {
 	},
 	config = function(_, opts)
 		require("nvim-treesitter.configs").setup(opts)
+
+		-- Neovim 0.12 passes directive captures as capture_id -> TSNode[].
+		-- Some nvim-treesitter directives still expect the older single-node shape.
+		local query = require("vim.treesitter.query")
+		local function first_node(match, capture_id)
+			local node = match[capture_id]
+			if type(node) == "table" and node.range == nil then
+				return node[1]
+			end
+			return node
+		end
+		local function lang_from_info_string(lang)
+			local aliases = {
+				ex = "elixir",
+				pl = "perl",
+				sh = "bash",
+				ts = "typescript",
+				uxn = "uxntal",
+			}
+			return vim.filetype.match({ filename = "a." .. lang }) or aliases[lang] or lang
+		end
+		query.add_directive("set-lang-from-info-string!", function(match, _, bufnr, pred, metadata)
+			local node = first_node(match, pred[2])
+			if not node then
+				return
+			end
+			local lang = vim.treesitter.get_node_text(node, bufnr):lower()
+			metadata["injection.language"] = lang_from_info_string(lang)
+		end, { force = true })
+		query.add_directive("set-lang-from-mimetype!", function(match, _, bufnr, pred, metadata)
+			local node = first_node(match, pred[2])
+			if not node then
+				return
+			end
+			local mime = vim.treesitter.get_node_text(node, bufnr)
+			local configured = ({
+				importmap = "json",
+				module = "javascript",
+				["application/ecmascript"] = "javascript",
+				["text/ecmascript"] = "javascript",
+			})[mime]
+			local parts = vim.split(mime, "/", {})
+			metadata["injection.language"] = configured or parts[#parts]
+		end, { force = true })
+
 		vim.opt.foldmethod = "expr"
 		vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 		vim.opt.foldenable = true

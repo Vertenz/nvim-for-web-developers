@@ -17,23 +17,34 @@ local servers = {
 	"yamlls",
 	"jsonls",
 	"helm_ls",
+	"terraformls",
+	"tflint",
+	"postgres_lsp",
+	"sqlls",
 }
 
 local additional = {
-	"eslint_d",
-	"markdownlint",
-	"prettier",
 	"stylua",
-	"prettierd",
 	"stylelint",
+	"terraform",
+	"sql-formatter",
+	"sqlfluff",
+	"tree-sitter-cli",
 }
 
 return {
 	"mason-org/mason-lspconfig.nvim",
+	event = { "BufReadPre", "BufNewFile" },
+	cmd = { "Mason", "MasonInstall", "MasonLog", "MasonUninstall", "MasonUpdate" },
 	opts = {
 		ensure_installed = servers,
 		automatic_enable = false,
 	},
+	config = function(_, opts)
+		require("config.vue3-lsp")
+		require("config.lsp-config")
+		require("mason-lspconfig").setup(opts)
+	end,
 	dependencies = {
 		{
 			"mason-org/mason.nvim",
@@ -67,8 +78,6 @@ return {
 							vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 						end
 
-						map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
-						map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 						map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 						map("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 						map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")

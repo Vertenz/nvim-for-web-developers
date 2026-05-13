@@ -59,7 +59,7 @@ local yamlls_config = {
 						description = "Kubernetes resource definitions",
 						fileMatch = { "k8s/**/*.yaml", "k8s/**/*.yml" },
 						name = "kubernetes",
-						url = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/all.json",
+						url = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.36.0-standalone-strict/all.json",
 					},
 				},
 			}),
@@ -70,6 +70,16 @@ local yamlls_config = {
 	},
 }
 
+local postgres_lsp_config = {
+	filetypes = { "sql" },
+	root_markers = { "postgres-language-server.jsonc", ".sqllsrc.json", "package.json", ".git" },
+	workspace_required = false,
+}
+
+local sqlls_config = {
+	root_markers = { ".sqllsrc.json" },
+}
+
 local ruff_config = {
 	-- Disable hover in favor of basedpyright (avoid duplicate hover info)
 	on_attach = function(client, _)
@@ -77,12 +87,16 @@ local ruff_config = {
 	end,
 }
 
+vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
+
 vim.lsp.config("somesass_ls", somesass_ls)
 vim.lsp.config("css_variables", css_variables)
 vim.lsp.config("stylelint_lsp", stylelint_lsp_config)
 vim.lsp.config("lua_ls", lua_ls_config)
 vim.lsp.config("jsonls", jsonls_config)
 vim.lsp.config("yamlls", yamlls_config)
+vim.lsp.config("postgres_lsp", postgres_lsp_config)
+vim.lsp.config("sqlls", sqlls_config)
 vim.lsp.config("ruff", ruff_config)
 
 vim.lsp.enable({
@@ -102,4 +116,8 @@ vim.lsp.enable({
 	"dockerls",
 	"docker_compose_language_service",
 	"helm_ls",
+	"terraformls",
+	"tflint",
+	"postgres_lsp",
+	"sqlls",
 })

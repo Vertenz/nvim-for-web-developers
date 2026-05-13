@@ -113,10 +113,3 @@ vim.keymap.set("n", "<leader>zt", "<cmd>set spell!<cr>", { desc = "Toggle spell 
 
 -- Plugins
 require("config.lazy")
-
--- LSP configs
-require("config.vue3-lsp")
-require("config.lsp-config")
-
--- Harpoon
-require("config.harpoon-setup")

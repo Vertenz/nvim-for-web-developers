@@ -24,6 +24,6 @@ require("lazy").setup({
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
 	install = { colorscheme = { "habamax" } },
-	-- Avoid GitHub network checks on every startup. Use :Lazy sync manually when needed.
-	checker = { enabled = false },
+	-- Check for plugin updates in the background once per day.
+	checker = { enabled = true, frequency = 86400, notify = true },
 })

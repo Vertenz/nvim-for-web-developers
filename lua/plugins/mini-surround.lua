@@ -1,5 +1,5 @@
 return {
-	"echasnovski/mini.surround",
+	"nvim-mini/mini.surround",
 	event = "VimEnter",
 	opts = {
 		mappings = {
@@ -10,6 +10,8 @@ return {
 			highlight = "gsh",
 			replace = "gsr",
 			update_n_lines = "gsn",
+			suffix_last = "",
+			suffix_next = "",
 		},
 	},
 }

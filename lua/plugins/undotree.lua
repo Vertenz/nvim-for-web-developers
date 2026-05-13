@@ -1,6 +1,6 @@
-return {
-	"mbbill/undotree",
-	keys = {
-		{ "<C-U>", vim.cmd.UndotreeToggle, noremap = true, silent = true, desc = "Toggle Undotree" },
-	},
-}
+vim.keymap.set("n", "<C-U>", function()
+	vim.cmd("packadd nvim.undotree")
+	require("undotree").open()
+end, { desc = "Toggle Undotree" })
+
+return {}

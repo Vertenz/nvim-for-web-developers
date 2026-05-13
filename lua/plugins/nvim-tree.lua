@@ -1,21 +1,26 @@
 return {
 	"nvim-tree/nvim-tree.lua",
 	version = "*",
-	lazy = false,
+	cmd = { "NvimTreeFindFile", "NvimTreeFocus", "NvimTreeOpen", "NvimTreeToggle" },
+	keys = {
+		{ "<C-n>", "<cmd>NvimTreeToggle<cr>", desc = "Toggle file tree" },
+	},
+	init = function()
+		vim.api.nvim_create_autocmd("VimEnter", {
+			callback = function(data)
+				if vim.fn.isdirectory(data.file) == 1 then
+					require("lazy").load({ plugins = { "nvim-tree.lua" } })
+					vim.cmd.cd(data.file)
+					require("nvim-tree.api").tree.open()
+				end
+			end,
+		})
+	end,
 	config = function()
-		vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-
-		local function open_nvim_tree(data)
-			if vim.fn.isdirectory(data.file) == 1 then
-				vim.cmd.cd(data.file)
-				require("nvim-tree.api").tree.open()
-			end
-		end
-
-		vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
-
 		require("nvim-tree").setup({
-			sort_by = "case_sensitive",
+			sort = {
+				sorter = "case_sensitive",
+			},
 			view = {
 				width = 50,
 				side = "left",

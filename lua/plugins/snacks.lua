@@ -4,6 +4,39 @@ return {
 	lazy = false,
 	---@type snacks.Config
 	opts = {
+		notifier = { enabled = true },
+		quickfile = { enabled = true },
+		input = { enabled = true },
+		statuscolumn = { enabled = true },
+		bigfile = {
+			enabled = true,
+			notify = true,
+			size = 1.5 * 1024 * 1024,
+			line_length = 800,
+			setup = function(ctx)
+				vim.b[ctx.buf].bigfile = true
+				vim.b[ctx.buf].completion = false
+				vim.b[ctx.buf].minianimate_disable = true
+				vim.b[ctx.buf].minihipatterns_disable = true
+
+				if vim.fn.exists(":NoMatchParen") ~= 0 then
+					vim.cmd([[NoMatchParen]])
+				end
+
+				vim.opt_local.spell = false
+				vim.opt_local.cursorline = false
+				vim.opt_local.foldenable = false
+				vim.opt_local.foldmethod = "manual"
+				vim.opt_local.conceallevel = 0
+				vim.opt_local.statuscolumn = ""
+
+				vim.schedule(function()
+					if vim.api.nvim_buf_is_valid(ctx.buf) then
+						vim.bo[ctx.buf].syntax = ctx.ft
+					end
+				end)
+			end,
+		},
 		dashboard = {
 			enabled = true,
 			width = 68,
