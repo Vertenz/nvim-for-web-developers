@@ -153,6 +153,7 @@ return {
 		formatters_by_ft = {
 			lua = { "stylua" },
 			python = { "ruff_organize_imports", "ruff_format" },
+			go = { "goimports", "gofumpt" },
 			terraform = { "terraform_fmt" },
 			["terraform-vars"] = { "terraform_fmt" },
 			sql = { "sqlfluff", "sql_formatter_postgres", stop_after_first = true },

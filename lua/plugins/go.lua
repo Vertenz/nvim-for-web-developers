@@ -1,0 +1,27 @@
+return {
+	"ray-x/go.nvim",
+	dependencies = {
+		"ray-x/guihua.lua",
+		"neovim/nvim-lspconfig",
+		"nvim-treesitter/nvim-treesitter",
+	},
+	ft = { "go", "gomod", "gosum", "gowork", "gotmpl" },
+	opts = {
+		lsp_cfg = false,
+		lsp_on_attach = false,
+		lsp_inlay_hints = { enable = false },
+		lsp_diag_hdlr = false,
+		lsp_keymaps = false,
+		null_ls = false,
+		diagnostic = false,
+		luasnip = false,
+		trouble = false,
+		dap_debug = false,
+		dap_debug_keymap = false,
+		dap_debug_gui = false,
+		dap_debug_vt = false,
+		icons = false,
+		verbose = false,
+		gofmt = "gofumpt",
+	},
+}

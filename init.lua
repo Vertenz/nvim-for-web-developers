@@ -13,6 +13,16 @@ vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
 
+local function prepend_path(path)
+	local current_path = vim.env.PATH or ""
+	if path ~= "" and vim.fn.isdirectory(path) == 1 and not current_path:find(path, 1, true) then
+		vim.env.PATH = path .. ":" .. current_path
+	end
+end
+
+prepend_path("/usr/local/go/bin")
+prepend_path(vim.fn.expand("~/go/bin"))
+
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.termguicolors = true
 
@@ -74,7 +84,7 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
-vim.keymap.set("n", "<leader>vt", vim.diagnostic.open_float, { desc = "Show diagnostics float" })
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic float" })
 
 -- Exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

@@ -7,6 +7,7 @@ return {
 			markdown = { "markdownlint" },
 			sql = { "sqlfluff" },
 			terraform = { "tflint" },
+			go = { "golangcilint" },
 			javascript = { "eslint" },
 			typescript = { "eslint" },
 			javascriptreact = { "eslint" },
@@ -56,6 +57,13 @@ return {
 			return root_from_markers(bufnr, { ".sqlfluff", "pyproject.toml", "setup.cfg", "tox.ini", "pep8.ini" })
 		end
 
+		local function go_root(bufnr)
+			return root_from_markers(
+				bufnr,
+				{ "go.mod", "go.work", ".golangci.yml", ".golangci.yaml", ".golangci.toml" }
+			)
+		end
+
 		lint.linters.eslint.cmd = function()
 			return local_node_bin_for_current_buf("eslint") or "eslint"
 		end
@@ -93,6 +101,10 @@ return {
 					if vim.fn.executable("tflint") == 1 then
 						table.insert(available, name)
 					end
+				elseif name == "golangcilint" then
+					if vim.fn.executable("golangci-lint") == 1 then
+						table.insert(available, name)
+					end
 				else
 					table.insert(available, name)
 				end
@@ -104,6 +116,10 @@ return {
 		local function lint_cwd(bufnr, linters)
 			if vim.tbl_contains(linters, "sqlfluff") then
 				return sqlfluff_root(bufnr)
+			end
+
+			if vim.tbl_contains(linters, "golangcilint") then
+				return go_root(bufnr)
 			end
 
 			return package_root(bufnr)

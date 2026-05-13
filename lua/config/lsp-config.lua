@@ -87,6 +87,46 @@ local ruff_config = {
 	end,
 }
 
+local gopls_config = {
+	settings = {
+		gopls = {
+			gofumpt = true,
+			completeUnimported = true,
+			usePlaceholders = true,
+			staticcheck = true,
+			semanticTokens = true,
+			directoryFilters = { "-.git", "-.vscode", "-.idea", "-**/node_modules" },
+			analyses = {
+				fieldalignment = true,
+				nilness = true,
+				shadow = true,
+				unusedparams = true,
+				unusedwrite = true,
+				useany = true,
+			},
+			codelenses = {
+				gc_details = true,
+				generate = true,
+				regenerate_cgo = true,
+				run_govulncheck = true,
+				test = true,
+				tidy = true,
+				upgrade_dependency = true,
+				vendor = true,
+			},
+			hints = {
+				assignVariableTypes = true,
+				compositeLiteralFields = true,
+				compositeLiteralTypes = true,
+				constantValues = true,
+				functionTypeParameters = true,
+				parameterNames = true,
+				rangeVariableTypes = true,
+			},
+		},
+	},
+}
+
 vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
 
 vim.lsp.config("somesass_ls", somesass_ls)
@@ -98,6 +138,7 @@ vim.lsp.config("yamlls", yamlls_config)
 vim.lsp.config("postgres_lsp", postgres_lsp_config)
 vim.lsp.config("sqlls", sqlls_config)
 vim.lsp.config("ruff", ruff_config)
+vim.lsp.config("gopls", gopls_config)
 
 vim.lsp.enable({
 	"somesass_ls",
@@ -120,4 +161,5 @@ vim.lsp.enable({
 	"tflint",
 	"postgres_lsp",
 	"sqlls",
+	"gopls",
 })

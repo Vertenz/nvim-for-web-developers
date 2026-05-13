@@ -7,15 +7,18 @@ return {
 	---@type avante.Config
 	opts = {
 		provider = "copilot",
+		selector = {
+			provider = "telescope",
+		},
 		behaviour = {
 			auto_suggestions = false,
+			auto_apply_diff_after_generation = false,
 		},
 	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"MunifTanjim/nui.nvim",
 		"nvim-telescope/telescope.nvim",
-		"nvim-tree/nvim-web-devicons",
 		{
 			"zbirenbaum/copilot.lua",
 			event = "InsertEnter",
@@ -27,7 +30,7 @@ return {
 					auto_trigger = true,
 					hide_during_completion = false,
 					keymap = {
-						accept = "<S-Tab>",
+						accept = "<M-l>",
 					},
 				},
 			},
@@ -47,12 +50,55 @@ return {
 			},
 		},
 		{
-			"MeanderingProgrammer/render-markdown.nvim",
-			opts = {
-				file_types = { "markdown", "Avante" },
-				latex = { enabled = false },
+			"saghen/blink.cmp",
+			optional = true,
+			dependencies = {
+				{
+					"saghen/blink.compat",
+					version = "2.*",
+					lazy = true,
+					opts = {},
+				},
 			},
-			ft = { "markdown", "Avante" },
+			opts = {
+				sources = {
+					per_filetype = {
+						AvanteInput = {
+							inherit_defaults = true,
+							"avante_commands",
+							"avante_mentions",
+							"avante_files",
+							"avante_shortcuts",
+						},
+						AvanteSelectedFiles = {
+							inherit_defaults = true,
+							"avante_files",
+						},
+					},
+					providers = {
+						avante_commands = {
+							name = "avante_commands",
+							module = "blink.compat.source",
+							score_offset = 90,
+						},
+						avante_files = {
+							name = "avante_files",
+							module = "blink.compat.source",
+							score_offset = 100,
+						},
+						avante_mentions = {
+							name = "avante_mentions",
+							module = "blink.compat.source",
+							score_offset = 1000,
+						},
+						avante_shortcuts = {
+							name = "avante_shortcuts",
+							module = "blink.compat.source",
+							score_offset = 1000,
+						},
+					},
+				},
+			},
 		},
 	},
 }
