@@ -12,7 +12,7 @@ return {
 		lsp_inlay_hints = { enable = false },
 		lsp_diag_hdlr = false,
 		lsp_keymaps = false,
-		null_ls = false,
+		null_ls = {},
 		diagnostic = false,
 		luasnip = false,
 		trouble = false,

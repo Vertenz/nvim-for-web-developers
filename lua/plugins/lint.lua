@@ -3,6 +3,11 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local lint = require("lint")
+		local go_bin = "/usr/local/go/bin"
+		if vim.fn.executable(go_bin .. "/go") == 1 and not string.find(vim.env.PATH, go_bin, 1, true) then
+			vim.env.PATH = go_bin .. ":" .. vim.env.PATH
+		end
+
 		local linters_by_ft = {
 			markdown = { "markdownlint" },
 			sql = { "sqlfluff" },
@@ -70,6 +75,43 @@ return {
 
 		lint.linters.markdownlint.cmd = function()
 			return local_node_bin_for_current_buf("markdownlint") or "markdownlint"
+		end
+
+		lint.linters.golangcilint.cmd = function()
+			local command = vim.fn.exepath("golangci-lint")
+			return command ~= "" and command or "golangci-lint"
+		end
+		lint.linters.golangcilint.args = {
+			"run",
+			"--allow-parallel-runners",
+			"--output.json.path=stdout",
+			"--output.text.path=",
+			"--output.tab.path=",
+			"--output.html.path=",
+			"--output.checkstyle.path=",
+			"--output.code-climate.path=",
+			"--output.junit-xml.path=",
+			"--output.teamcity.path=",
+			"--output.sarif.path=",
+			"--issues-exit-code=0",
+			"--show-stats=false",
+			"--path-mode=abs",
+			function()
+				local go_mod = vim.fn.system({ "go", "env", "GOMOD" }):gsub("%s+", "")
+				local filename_modifier = (go_mod == "" or go_mod == "/dev/null") and ":p" or ":h"
+				return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), filename_modifier)
+			end,
+		}
+		local golangci_parser = lint.linters.golangcilint.parser
+		lint.linters.golangcilint.parser = function(output, bufnr, cwd)
+			local ok, diagnostics = pcall(golangci_parser, output, bufnr, cwd)
+			if ok then
+				return diagnostics
+			end
+			vim.schedule(function()
+				vim.notify("golangci-lint returned non-JSON output; check :messages", vim.log.levels.WARN)
+			end)
+			return {}
 		end
 
 		lint.linters.sqlfluff.args = {

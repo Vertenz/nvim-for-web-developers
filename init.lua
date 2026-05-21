@@ -14,14 +14,22 @@ vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
 local function prepend_path(path)
-	local current_path = vim.env.PATH or ""
-	if path ~= "" and vim.fn.isdirectory(path) == 1 and not current_path:find(path, 1, true) then
-		vim.env.PATH = path .. ":" .. current_path
+	if path == "" or vim.fn.isdirectory(path) ~= 1 then
+		return
 	end
+
+	local parts = vim.split(vim.env.PATH or "", ":", { plain = true, trimempty = true })
+	parts = vim.tbl_filter(function(part)
+		return part ~= path
+	end, parts)
+	table.insert(parts, 1, path)
+	vim.env.PATH = table.concat(parts, ":")
 end
 
-prepend_path("/usr/local/go/bin")
+-- Prefer Homebrew Go on Apple Silicon; keep the official installer path as fallback.
 prepend_path(vim.fn.expand("~/go/bin"))
+prepend_path("/usr/local/go/bin")
+prepend_path("/opt/homebrew/bin")
 
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.termguicolors = true

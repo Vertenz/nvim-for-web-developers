@@ -4,6 +4,7 @@ return {
 	lazy = false,
 	---@type snacks.Config
 	opts = {
+		image = { enabled = false },
 		notifier = { enabled = true },
 		quickfile = { enabled = true },
 		input = { enabled = true },
@@ -91,4 +92,11 @@ web + electron workspace]],
 			},
 		},
 	},
+	config = function(_, opts)
+		require("snacks").setup(opts)
+
+		-- Image rendering needs a kitty-protocol terminal and external converters.
+		-- Keep the optional module disabled in this setup and silence its health-only checks.
+		require("snacks.image").meta.health = false
+	end,
 }
