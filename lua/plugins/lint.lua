@@ -3,6 +3,7 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local lint = require("lint")
+		local golangci_lint_timeout = "5m"
 		local go_bin = "/usr/local/go/bin"
 		if vim.fn.executable(go_bin .. "/go") == 1 and not string.find(vim.env.PATH, go_bin, 1, true) then
 			vim.env.PATH = go_bin .. ":" .. vim.env.PATH
@@ -95,6 +96,7 @@ return {
 			"--output.sarif.path=",
 			"--issues-exit-code=0",
 			"--show-stats=false",
+			"--timeout=" .. golangci_lint_timeout,
 			"--path-mode=abs",
 			function()
 				local go_mod = vim.fn.system({ "go", "env", "GOMOD" }):gsub("%s+", "")
@@ -179,7 +181,7 @@ return {
 		end
 
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
 			group = lint_augroup,
 			callback = function(args)
 				if vim.bo[args.buf].modifiable and not is_big_file(args.buf) then

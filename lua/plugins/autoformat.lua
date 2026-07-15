@@ -31,6 +31,8 @@ local stylelint_filetypes = {
 	postcss = true,
 }
 
+local format_timeout_ms = 5000
+
 local function package_root_from_path(path)
 	if not path or path == "" then
 		return nil
@@ -146,7 +148,7 @@ return {
 			end
 
 			return {
-				timeout_ms = 3000,
+				timeout_ms = format_timeout_ms,
 				lsp_format = prettier_filetypes[filetype] and "never" or "fallback",
 			}
 		end,
@@ -194,7 +196,7 @@ return {
 						cwd = root,
 						stdin = table.concat(lines, "\n"),
 						text = true,
-					}):wait()
+					}):wait(5000) -- kill eslint instead of blocking the UI indefinitely
 
 					local ok, decoded = pcall(vim.json.decode, result.stdout or "")
 					local fixed = ok and decoded and decoded[1] and decoded[1].output

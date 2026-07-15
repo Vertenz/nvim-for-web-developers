@@ -44,7 +44,7 @@ return {
 			function()
 				require("harpoon"):list():clear()
 			end,
-			desc = "Clear harpoon list",
+			desc = "Clear all harpoon files",
 		},
 		{
 			"<leader>h1",

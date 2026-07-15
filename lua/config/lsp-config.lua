@@ -125,6 +125,12 @@ local gopls_config = {
 
 vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
 
+-- Keep emmet out of .vue buffers so abbreviation candidates don't crowd out
+-- component/prop completions from vue_ls/vtsls.
+vim.lsp.config("emmet_language_server", {
+	filetypes = { "html", "css", "scss", "less", "postcss" },
+})
+
 vim.lsp.config("somesass_ls", somesass_ls)
 vim.lsp.config("css_variables", css_variables)
 vim.lsp.config("stylelint_lsp", stylelint_lsp_config)

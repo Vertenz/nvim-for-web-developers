@@ -28,6 +28,10 @@ return {
 				plsql = { inherit_defaults = true, "dadbod" },
 			},
 			providers = {
+				-- Show the menu without waiting on slow clients (vue_ls/tailwindcss);
+				-- late responders are merged in asynchronously after the timeout.
+				lsp = { timeout_ms = 500 },
+				buffer = { score_offset = -5 },
 				dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
 			},
 		},
